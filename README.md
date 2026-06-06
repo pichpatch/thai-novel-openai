@@ -73,11 +73,14 @@ Important fields:
   "title_seconds": 5,
   "scene_tail_trim_seconds": 0,
   "trim_trailing_silence": false,
+  "scene_max_count": 15,
   "background_volume": 0.08
 }
 ```
 
 Keep `scene_tail_trim_seconds` as `0` and `trim_trailing_silence` as `false` unless you know you want to change audio timing. These settings prevent Thai words from being cut at the end of a scene.
+
+`scene_max_count` limits how many scene images and scene clips are created per episode. The script keeps all narration text and combines scenes when needed, so a larger episode can still fit into 15 scenes.
 
 6. Put story files under `data/`.
 
@@ -94,6 +97,8 @@ data/ep_01.md
 data/ep_02.md
 data/ep_03.md
 ...
+data/ตอนที่ 01 - ชื่อตอน.md
+data/ตอนที่ 02 - ชื่อตอน.md
 ```
 
 7. Tell Codex to generate videos.
@@ -199,7 +204,7 @@ Build one episode:
 python3 scripts/audiobook_video.py build data/ep_01.md
 ```
 
-Build every `data/ep_*.md` episode:
+Build every `.md` episode in `data/`, including `ep_01.md` and Thai filenames like `ตอนที่ 01 - ชื่อตอน.md`:
 
 ```bash
 python3 scripts/audiobook_video.py build-all

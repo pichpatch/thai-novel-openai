@@ -108,33 +108,86 @@ def clean_markdown(text):
     return text.strip()
 
 
+def limit_scene_count(scenes, max_count):
+    if not max_count or max_count <= 0 or len(scenes) <= max_count:
+        return scenes
+
+    limited = []
+    total_scenes = len(scenes)
+    for idx in range(max_count):
+        start = math.floor(idx * total_scenes / max_count)
+        end = math.floor((idx + 1) * total_scenes / max_count)
+        chunk = "\n\n".join(scenes[start:end]).strip()
+        if chunk:
+            limited.append(chunk)
+    return limited
+
+
+def split_paragraphs_by_scene_count(paragraphs, max_count):
+    if not paragraphs:
+        return []
+    if not max_count or max_count <= 0:
+        return ["\n\n".join(paragraphs).strip()]
+
+    def chunk_count(capacity):
+        count = 1
+        current_chars = 0
+        for paragraph in paragraphs:
+            paragraph_chars = len(paragraph)
+            next_chars = current_chars + paragraph_chars + (2 if current_chars else 0)
+            if current_chars and next_chars > capacity:
+                count += 1
+                current_chars = paragraph_chars
+            else:
+                current_chars = next_chars
+        return count
+
+    low = max(len(paragraph) for paragraph in paragraphs)
+    high = sum(len(paragraph) for paragraph in paragraphs) + 2 * (len(paragraphs) - 1)
+    while low < high:
+        mid = (low + high) // 2
+        if chunk_count(mid) <= max_count:
+            high = mid
+        else:
+            low = mid + 1
+
+    scenes = []
+    current = []
+    current_chars = 0
+    for paragraph in paragraphs:
+        paragraph_chars = len(paragraph)
+        next_chars = current_chars + paragraph_chars + (2 if current_chars else 0)
+        if current and next_chars > low:
+            scenes.append("\n\n".join(current).strip())
+            current = [paragraph]
+            current_chars = paragraph_chars
+        else:
+            current.append(paragraph)
+            current_chars = next_chars
+    if current:
+        scenes.append("\n\n".join(current).strip())
+    return scenes
+
+
 def split_scenes(body, cfg):
+    max_count = int(cfg.get("scene_max_count", 15))
     body = re.sub(r"(?m)^\s*#{1,2}\s+.+\s*$", "", body).strip()
     by_heading = re.split(r"(?im)^\s*##+\s+(?:scene|ฉาก)\s*\d*.*$", body)
     if len(by_heading) > 1:
         chunks = [clean_markdown(x) for x in by_heading if clean_markdown(x)]
-        return chunks
+        return limit_scene_count(chunks, max_count)
 
     cleaned = clean_markdown(body)
     rough = [x.strip() for x in cleaned.split("---SCENE---") if x.strip()]
     if len(rough) > 1:
-        return rough
+        return limit_scene_count(rough, max_count)
 
     paragraphs = [p.strip() for p in re.split(r"\n\s*\n", cleaned) if p.strip()]
-    scenes = []
-    current = ""
-    max_chars = int(cfg["scene_max_chars"])
-    min_chars = int(cfg["scene_min_chars"])
-    for p in paragraphs:
-        next_text = f"{current}\n\n{p}".strip() if current else p
-        if current and len(next_text) > max_chars and len(current) >= min_chars:
-            scenes.append(current)
-            current = p
-        else:
-            current = next_text
-    if current:
-        scenes.append(current)
-    return scenes
+    return split_paragraphs_by_scene_count(paragraphs, max_count)
+
+
+def episode_sort_key(md_path):
+    return (episode_number(md_path), md_path.name)
 
 
 def make_plan(md_path):
@@ -620,7 +673,10 @@ def main():
     elif args.command == "build":
         build(args.episode, args.allow_placeholders)
     elif args.command == "build-all":
-        for md_path in sorted(DATA_DIR.glob("ep_*.md")):
+        md_paths = sorted(DATA_DIR.glob("*.md"), key=episode_sort_key)
+        if not md_paths:
+            raise SystemExit(f"No episode markdown files found in {DATA_DIR}")
+        for md_path in md_paths:
             build(md_path, allow_placeholders=False)
     elif args.command == "bg":
         generate_background()

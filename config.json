@@ -13,8 +13,7 @@
   "trim_trailing_silence": false,
   "trailing_silence_duration": 0.35,
   "trailing_silence_threshold": "-45dB",
-  "scene_max_chars": 850,
-  "scene_min_chars": 300,
+  "scene_max_count": 15,
   "background_volume": 0.08,
   "narration_volume": 1.0,
   "image_style": "cinematic Thai fantasy novel illustration, detailed environment, soft dramatic lighting, painterly realism, no text, no watermark"
