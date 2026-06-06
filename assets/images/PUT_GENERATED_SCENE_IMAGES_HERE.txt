@@ -1,0 +1,15 @@
+Scene images go here after Codex/GPT generates them.
+
+Expected names:
+- ep_01_scene_001.png
+- ep_01_scene_002.png
+- ep_01_scene_003.png
+
+Run:
+python3 scripts/audiobook_video.py plan data/ep_01.md
+
+That creates:
+output/ep_01/scene_plan.json
+output/ep_01/image_prompts.md
+
+Ask Codex to generate those images, then put them in this folder with the expected names.

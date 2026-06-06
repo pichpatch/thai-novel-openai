@@ -1,0 +1,21 @@
+{
+  "novel_name": "YOUR_NOVEL_NAME",
+  "channel_name": "T-H-A-I Channel",
+  "intro_text": "ยินดีต้อนรับเข้าสู่ T-H-A-I Channel ขอให้สนุกกับการรับฟังนะครับ",
+  "voice": "th-TH-NiwatNeural",
+  "rate": "+0%",
+  "volume": "+0%",
+  "resolution": [1920, 1080],
+  "fps": 30,
+  "intro_seconds": 6,
+  "title_seconds": 5,
+  "scene_tail_trim_seconds": 0,
+  "trim_trailing_silence": false,
+  "trailing_silence_duration": 0.35,
+  "trailing_silence_threshold": "-45dB",
+  "scene_max_chars": 850,
+  "scene_min_chars": 300,
+  "background_volume": 0.08,
+  "narration_volume": 1.0,
+  "image_style": "cinematic Thai fantasy novel illustration, detailed environment, soft dramatic lighting, painterly realism, no text, no watermark"
+}

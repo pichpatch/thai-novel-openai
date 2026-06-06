@@ -1,0 +1,22 @@
+# python
+.venv
+
+# data
+data/
+
+# logs
+logs/
+
+# macbook
+.DS_Store
+
+# vscode
+.vscode/
+
+# config
+assets/intro/*.png
+
+# output
+assets/images/*.png
+assets/images/*.jpg
+output/

@@ -1,0 +1,9 @@
+Put your first 10-second PromptPay/admin support screen here.
+
+Accepted filenames:
+- intro.png
+- intro.jpg
+- intro.jpeg
+
+The video starts with this image while saying:
+"ยินดีต้อนรับเข้าสู่ T-H-A-I Channel ขอให้สนุกกับการรับฟังนะครับ"
