@@ -47,7 +47,7 @@ pip install -r requirements.txt
 Example directory:
 
 ```text
-/Users/whaikung/Documents/thai-novel-openai
+~/Documents/thai-novel-openai
 ```
 
 4. Add your intro screen.
